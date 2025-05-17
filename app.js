@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
@@ -14,7 +15,13 @@ mongoose.connect('mongodb://localhost:27017/Invitation_Management_System');
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
+//app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
+app.use(session({
+  secret: 'mysecret',
+  resave: false,
+  saveUninitialized: true,
+  store: MongoStore.create({ mongoUrl: 'mongodb://localhost:27017/mydb' })
+}));
 app.use(flash());
 
 // Handlebars setup
